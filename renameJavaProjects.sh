@@ -6,7 +6,7 @@ NEW_PROJECT_GROUP_ID=''
 NEW_PROJECT_NAME=''
 
 gather_project_information() {
-	echo "Please put down the path to current project's name on your PC, followed by [ENTER]:"
+	echo "Please put down current project's name on your PC, followed by [ENTER]:"
 	read CURRENT_PROJECT_NAME
 
 	echo "Please put down the path to current project's folder on your PC, followed by [ENTER]:"
@@ -40,7 +40,15 @@ rename_folder() {
 
 # }
 
+delete_useless_files() {
+	rm -fr $CURRENT_PROJECT_PATH/$NEW_PROJECT_NAME/target
+	rm -fr $CURRENT_PROJECT_PATH/$NEW_PROJECT_NAME/.idea
+	rm -fr $CURRENT_PROJECT_PATH/$NEW_PROJECT_NAME/.git
+	find "$CURRENT_PROJECT_PATH/$NEW_PROJECT_NAME" -type f -name "*.iml" -exec rm -f {} \;
+
+}
+
 
 gather_project_information
-
 rename_folder
+delete_useless_files
