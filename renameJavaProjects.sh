@@ -31,19 +31,23 @@ rename_folder() {
 	mv $CURRENT_PROJECT_PATH/$CURRENT_PROJECT_NAME $CURRENT_PROJECT_PATH/$NEW_PROJECT_NAME
 }
 
-# rename_pom_details() {
+rename_pom_details() {
+	sed -i '/<dependencies>/,/<\/dependencies>/d' $CURRENT_PROJECT_PATH/$NEW_PROJECT_NAME/pom.xml
+	sed -i 's/\(<groupId>\).*\(<\/groupId>\)/\1'"$NEW_PROJECT_GROUP_ID"'\2/g' $CURRENT_PROJECT_PATH/$NEW_PROJECT_NAME/pom.xml
+	sed -i 's/\(<artifactId>\).*\(<\/artifactId>\)/\1'"$NEW_PROJECT_NAME"'\2/g' $CURRENT_PROJECT_PATH/$NEW_PROJECT_NAME/pom.xml
+	sed -i 's/\(<name>\).*\(<\/name>\)/\1'"$NEW_PROJECT_NAME"'\2/g' $CURRENT_PROJECT_PATH/$NEW_PROJECT_NAME/pom.xml
+}
 
-
-# }
-
-# rename_packages_folders() {
-
-# }
+remove_packages_related_files() {
+	rm -fr $CURRENT_PROJECT_PATH/$NEW_PROJECT_NAME/src/main/java/*
+	rm -fr $CURRENT_PROJECT_PATH/$NEW_PROJECT_NAME/src/test/java/*
+}
 
 delete_useless_files() {
 	rm -fr $CURRENT_PROJECT_PATH/$NEW_PROJECT_NAME/target
 	rm -fr $CURRENT_PROJECT_PATH/$NEW_PROJECT_NAME/.idea
 	rm -fr $CURRENT_PROJECT_PATH/$NEW_PROJECT_NAME/.git
+	rm -fr $CURRENT_PROJECT_PATH/$NEW_PROJECT_NAME/README.md
 	find "$CURRENT_PROJECT_PATH/$NEW_PROJECT_NAME" -type f -name "*.iml" -exec rm -f {} \;
 
 }
@@ -51,4 +55,6 @@ delete_useless_files() {
 
 gather_project_information
 rename_folder
+remove_packages_related_files
 delete_useless_files
+rename_pom_details
